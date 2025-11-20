@@ -1,0 +1,46 @@
+name: Promote to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      post_path:
+        description: 'Path to post file (e.g., Posts/blog_post_1.md)'
+        required: true
+        type: string
+
+jobs:
+  promote-post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install script dependencies
+        run: |
+          cd Pipeline/scripts
+          npm install
+      
+      - name: Promote post to production
+        env:
+          MEDIUM_TOKEN: ${{ secrets.MEDIUM_TOKEN }}
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORG_ID: ${{ secrets.LINKEDIN_ORG_ID }}
+          DRAFT_MODE: 'false'
+          METADATA_FILE: ${{ github.workspace }}/../Local/.local/metadata.json
+        run: |
+          cd Pipeline/scripts
+          POST_PATH="${{ github.event.inputs.post_path }}"
+          
+          # Create metadata directory
+          mkdir -p ../../.local
+          
+          echo "Promoting $POST_PATH to production"
+          node publish-all.js "../../$POST_PATH"
+          
+          echo "Post promoted successfully"
+

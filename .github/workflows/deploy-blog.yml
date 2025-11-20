@@ -1,0 +1,228 @@
+name: Deploy Blog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Posts/**'
+      - 'Pipeline/**'
+      - '.github/workflows/**'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Deployment mode'
+        required: true
+        default: 'stage'
+        type: choice
+        options:
+          - stage
+          - production
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed-files: ${{ steps.changes.outputs.posts }}
+      deployment-mode: ${{ steps.mode.outputs.mode }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      
+      - name: Determine deployment mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            MODE="${{ github.event.inputs.mode }}"
+          else
+            # Default to staging for automatic pushes
+            MODE="stage"
+          fi
+          echo "mode=$MODE" >> $GITHUB_OUTPUT
+          echo "Deployment mode: $MODE"
+      
+      - name: Detect changed posts
+        id: changes
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Manual trigger - process all posts
+            POSTS=$(find Posts -name "*.md" -type f | tr '\n' ' ')
+          else
+            # Push trigger - only changed files
+            POSTS=$(git diff --name-only HEAD~1 HEAD | grep "^Posts/.*\.md$" | tr '\n' ' ' || echo "")
+          fi
+          
+          if [ -z "$POSTS" ]; then
+            echo "No posts to process"
+            echo "posts=" >> $GITHUB_OUTPUT
+          else
+            echo "Found posts: $POSTS"
+            echo "posts=$POSTS" >> $GITHUB_OUTPUT
+          fi
+  
+  process-posts:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.changed-files != ''
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install script dependencies
+        run: |
+          cd Pipeline/scripts
+          npm install
+      
+      - name: Process posts
+        id: process
+        run: |
+          cd Pipeline/scripts
+          POSTS="${{ needs.detect-changes.outputs.changed-files }}"
+          
+          for post in $POSTS; do
+            echo "Processing: $post"
+            node process-post.js "../../$post" || exit 1
+          done
+          
+          echo "All posts processed successfully"
+  
+  publish-to-platforms:
+    needs: [detect-changes, process-posts]
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.changed-files != ''
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install script dependencies
+        run: |
+          cd Pipeline/scripts
+          npm install
+      
+      - name: Publish to platforms
+        env:
+          MEDIUM_TOKEN: ${{ secrets.MEDIUM_TOKEN }}
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_ORG_ID: ${{ secrets.LINKEDIN_ORG_ID }}
+          DRAFT_MODE: ${{ needs.detect-changes.outputs.deployment-mode == 'stage' && 'true' || 'false' }}
+          METADATA_FILE: ${{ github.workspace }}/../Local/.local/metadata.json
+        run: |
+          cd Pipeline/scripts
+          POSTS="${{ needs.detect-changes.outputs.changed-files }}"
+          MODE="${{ needs.detect-changes.outputs.deployment-mode }}"
+          
+          # Create metadata directory
+          mkdir -p ../../.local
+          
+          for post in $POSTS; do
+            echo "Publishing: $post (mode: $MODE)"
+            node publish-all.js "../../$post" || echo "Failed to publish $post, continuing..."
+          done
+      
+      - name: Upload metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-metadata
+          path: .local/metadata.json
+          if-no-files-found: ignore
+  
+  build-site:
+    needs: [detect-changes, process-posts]
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.changed-files != ''
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Copy posts to Astro content directory
+        run: |
+          mkdir -p Pipeline/site/src/content/blog
+          mkdir -p Pipeline/site/public/Images
+          cp Posts/*.md Pipeline/site/src/content/blog/ || true
+          cp -r Images/* Pipeline/site/public/Images/ || true
+          
+          # Fix image paths in markdown files (../Images/ -> /Images/)
+          find Pipeline/site/src/content/blog -name "*.md" -exec sed -i 's|../Images/|/Images/|g' {} \;
+      
+      - name: Install Astro dependencies
+        run: |
+          cd Pipeline/site
+          npm install
+      
+      - name: Build Astro site
+        run: |
+          cd Pipeline/site
+          npm run build
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-build
+          path: Pipeline/build
+          retention-days: 7
+  
+  deploy-github-pages:
+    needs: build-site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: ${{ needs.detect-changes.outputs.deployment-mode == 'production' && 'github-pages' || 'github-pages-stage' }}
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: site-build
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: '.'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+  
+  deploy-vercel:
+    needs: build-site
+    runs-on: ubuntu-latest
+    if: needs.detect-changes.outputs.deployment-mode == 'production' && secrets.VERCEL_TOKEN != ''
+    continue-on-error: true
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: site-build
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cd Pipeline/build
+          vercel --prod --token $VERCEL_TOKEN --yes
