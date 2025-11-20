@@ -177,7 +177,8 @@ jobs:
           cp Posts/*.md Pipeline/site/src/content/blog/ || true
           cp -r Images/* Pipeline/site/public/Images/ || true
           
-          # Generate CNAME file from config
+          # Generate CNAME file from config (create directory first)
+          mkdir -p Pipeline/site/public
           cd Pipeline/scripts
           npm install
           BLOG_DOMAIN="${{ secrets.BLOG_DOMAIN || 'blog.YOUR_DOMAIN.com' }}" \

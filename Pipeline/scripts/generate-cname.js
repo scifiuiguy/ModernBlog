@@ -4,7 +4,7 @@
  * This should be run during build to create the CNAME file
  */
 
-import { writeFileSync } from 'fs';
+import { writeFileSync, mkdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { getConfig } from './config.js';
@@ -20,9 +20,13 @@ export function generateCNAME(outputPath) {
   const config = getConfig();
   const domain = config.blogDomain;
   
+  // Ensure directory exists
+  const outputDir = dirname(outputPath);
+  mkdirSync(outputDir, { recursive: true });
+  
   // Write CNAME file
   writeFileSync(outputPath, `${domain}\n`, 'utf-8');
-  console.log(`Generated CNAME file: ${domain}`);
+  console.log(`Generated CNAME file: ${domain} at ${outputPath}`);
 }
 
 // CLI usage
