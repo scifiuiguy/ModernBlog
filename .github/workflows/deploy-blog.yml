@@ -162,6 +162,7 @@ jobs:
     needs: [detect-changes, process-posts]
     runs-on: ubuntu-latest
     if: needs.detect-changes.outputs.changed-files != ''
+    # Note: Can run in parallel with publish-to-platforms (both depend on process-posts)
     steps:
       - uses: actions/checkout@v4
       
@@ -177,10 +178,19 @@ jobs:
           cp Posts/*.md Pipeline/site/src/content/blog/ || true
           cp -r Images/* Pipeline/site/public/Images/ || true
           
+          # Normalize frontmatter (convert Date objects to strings for Astro)
+          cd Pipeline/scripts
+          npm install
+          for post in ../../site/src/content/blog/*.md; do
+            if [ -f "$post" ]; then
+              node normalize-frontmatter.js "$post"
+            fi
+          done
+          cd ../..
+          
           # Generate CNAME file from config (create directory first)
           mkdir -p Pipeline/site/public
           cd Pipeline/scripts
-          npm install
           BLOG_DOMAIN="${{ secrets.BLOG_DOMAIN || 'blog.YOUR_DOMAIN.com' }}" \
           GITHUB_USERNAME="${{ secrets.GITHUB_USERNAME || 'YOUR_GITHUB_USERNAME' }}" \
           node generate-cname.js ../../site/public/CNAME
