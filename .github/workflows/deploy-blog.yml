@@ -183,6 +183,11 @@ jobs:
           cd Pipeline/site
           npm run build
       
+      - name: Create .nojekyll file
+        run: |
+          touch Pipeline/build/.nojekyll
+          echo "Created .nojekyll to disable Jekyll processing"
+      
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
