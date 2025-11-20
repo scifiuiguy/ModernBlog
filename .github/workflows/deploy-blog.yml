@@ -211,6 +211,8 @@ jobs:
       
       - name: Create .nojekyll file
         run: |
+          # Ensure build directory exists (Astro should create it, but be safe)
+          mkdir -p Pipeline/build
           touch Pipeline/build/.nojekyll
           echo "Created .nojekyll to disable Jekyll processing"
       
