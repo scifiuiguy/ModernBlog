@@ -208,16 +208,22 @@ jobs:
         run: |
           cd Pipeline/site
           npm run build
-          # Verify build completed
-          if [ ! -d "../build" ]; then
-            echo "ERROR: Build directory not created!"
+          # Check where build output went
+          if [ -d "../build" ]; then
+            echo "Build completed to ../build"
+          elif [ -d "dist" ]; then
+            echo "Build went to dist/, moving to ../build"
+            mkdir -p ../build
+            mv dist/* ../build/
+            rmdir dist
+          else
+            echo "ERROR: Build output not found in ../build or dist/"
             exit 1
           fi
-          echo "Build completed successfully"
       
       - name: Create .nojekyll file
         run: |
-          # Ensure build directory exists (Astro should create it, but be safe)
+          # Ensure build directory exists
           mkdir -p Pipeline/build
           touch Pipeline/build/.nojekyll
           echo "Created .nojekyll to disable Jekyll processing"

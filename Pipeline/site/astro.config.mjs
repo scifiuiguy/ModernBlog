@@ -6,9 +6,7 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   integrations: [react(), mdx()],
   output: 'static',
-  build: {
-    outDir: '../build'
-  },
+  outDir: '../build', // Top-level outDir (relative to config file location)
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
