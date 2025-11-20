@@ -30,6 +30,15 @@ export function processPost(filePath) {
     const fileContent = readFileSync(filePath, 'utf-8');
     const { data: frontmatter, content } = matter(fileContent);
     
+    // Normalize date before validation (gray-matter/js-yaml may parse as Date object)
+    if (frontmatter.date) {
+      if (frontmatter.date instanceof Date) {
+        frontmatter.date = frontmatter.date.toISOString().split('T')[0];
+      } else {
+        frontmatter.date = String(frontmatter.date).trim();
+      }
+    }
+    
     const errors = validateFrontmatter(frontmatter, filePath);
     
     // Auto-generate canonical_url if not provided
@@ -89,8 +98,13 @@ function validateFrontmatter(frontmatter, filePath) {
     errors.push(`published must be a boolean in ${filePath}`);
   }
   
-  if (frontmatter.date && !/^\d{4}-\d{2}-\d{2}$/.test(frontmatter.date)) {
-    errors.push(`date must be in YYYY-MM-DD format in ${filePath}`);
+  if (frontmatter.date) {
+    // Date should already be normalized to string by this point
+    const dateStr = String(frontmatter.date).trim();
+    
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      errors.push(`date must be in YYYY-MM-DD format in ${filePath} (got: ${dateStr})`);
+    }
   }
   
   return errors;
