@@ -175,8 +175,19 @@ jobs:
         run: |
           mkdir -p Pipeline/site/src/content/blog
           mkdir -p Pipeline/site/public/Images
+          
+          # Copy posts
           cp Posts/*.md Pipeline/site/src/content/blog/ || true
-          cp -r Images/* Pipeline/site/public/Images/ || true
+          
+          # Copy images (with verification)
+          if [ -d "Images" ] && [ "$(ls -A Images 2>/dev/null)" ]; then
+            echo "Copying images from Images/ to Pipeline/site/public/Images/"
+            cp -r Images/* Pipeline/site/public/Images/ || true
+            echo "Images copied. Contents of public/Images:"
+            ls -la Pipeline/site/public/Images/ | head -10
+          else
+            echo "WARNING: Images directory is empty or doesn't exist"
+          fi
           
           # Normalize frontmatter (convert Date objects to strings for Astro)
           cd Pipeline/scripts
@@ -196,8 +207,19 @@ jobs:
           node generate-cname.js ../../site/public/CNAME
           cd ../..
           
-          # Fix image paths in markdown files (../Images/ -> /Images/)
-          find Pipeline/site/src/content/blog -name "*.md" -exec sed -i 's|../Images/|/Images/|g' {} \;
+          # Fix image paths in markdown files
+          # Determine base path for image URLs
+          if [ -n "${{ secrets.BLOG_DOMAIN }}" ] && [[ "${{ secrets.BLOG_DOMAIN }}" != *"github.io"* ]] && [[ "${{ secrets.BLOG_DOMAIN }}" != "blog.YOUR_DOMAIN.com" ]]; then
+            IMAGE_BASE_PATH="/"
+            echo "Using custom domain, image base: /"
+          else
+            IMAGE_BASE_PATH="/ModernBlog/"
+            echo "Using GitHub Pages, image base: /ModernBlog/"
+          fi
+          echo "Fixing image paths in markdown files (../Images/ -> ${IMAGE_BASE_PATH}Images/)..."
+          find Pipeline/site/src/content/blog -name "*.md" -exec sed -i "s|../Images/|${IMAGE_BASE_PATH}Images/|g" {} \;
+          echo "Image paths fixed. Sample content:"
+          grep -h "src=" Pipeline/site/src/content/blog/*.md | head -3 || echo "No image tags found"
       
       - name: Install Astro dependencies
         run: |
@@ -207,6 +229,15 @@ jobs:
       - name: Build Astro site
         run: |
           cd Pipeline/site
+          # Set base path: /ModernBlog/ for GitHub Pages, / for custom domain
+          # If BLOG_DOMAIN is set to a custom domain, use /, otherwise use /REPO_NAME/
+          if [ -n "${{ secrets.BLOG_DOMAIN }}" ] && [[ "${{ secrets.BLOG_DOMAIN }}" != *"github.io"* ]] && [[ "${{ secrets.BLOG_DOMAIN }}" != "blog.YOUR_DOMAIN.com" ]]; then
+            export ASTRO_BASE_PATH="/"
+            echo "Using custom domain, base path: /"
+          else
+            export ASTRO_BASE_PATH="/ModernBlog/"
+            echo "Using GitHub Pages, base path: /ModernBlog/"
+          fi
           npm run build
           # Check where build output went
           if [ -d "../build" ]; then
@@ -219,6 +250,16 @@ jobs:
           else
             echo "ERROR: Build output not found in ../build or dist/"
             exit 1
+          fi
+          # Verify images are in build output
+          echo "Checking for images in build output:"
+          if [ -d "../build/Images" ]; then
+            echo "✓ Images directory found in build output"
+            ls -la ../build/Images/ | head -10
+          else
+            echo "WARNING: Images directory not found in build output!"
+            echo "Contents of build root:"
+            ls -la ../build/ | head -10
           fi
       
       - name: Create .nojekyll file
