@@ -208,6 +208,12 @@ jobs:
         run: |
           cd Pipeline/site
           npm run build
+          # Verify build completed
+          if [ ! -d "../build" ]; then
+            echo "ERROR: Build directory not created!"
+            exit 1
+          fi
+          echo "Build completed successfully"
       
       - name: Create .nojekyll file
         run: |
@@ -216,12 +222,30 @@ jobs:
           touch Pipeline/build/.nojekyll
           echo "Created .nojekyll to disable Jekyll processing"
       
+      - name: Verify build output
+        run: |
+          echo "Checking build output directory..."
+          if [ ! -d "Pipeline/build" ]; then
+            echo "ERROR: Build directory does not exist!"
+            exit 1
+          fi
+          echo "Build directory exists. Contents:"
+          ls -la Pipeline/build/ | head -20
+          echo "Total files:"
+          find Pipeline/build -type f | wc -l
+          if [ ! -f "Pipeline/build/index.html" ]; then
+            echo "WARNING: index.html not found in build output!"
+          else
+            echo "✓ index.html found"
+          fi
+      
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: site-build
           path: Pipeline/build
           retention-days: 7
+          if-no-files-found: error
   
   deploy-github-pages:
     needs: build-site
