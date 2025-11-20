@@ -2,6 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
+// Get base URL for links (handles GitHub Pages subdirectory)
+const baseUrl = import.meta.env.BASE_URL;
+
 // Get all blog posts
 const posts = await getCollection('blog');
 // Sort by date (newest first)
@@ -13,7 +16,7 @@ posts.sort((a, b) => {
 
 // Latest post is the first one
 const latestPost = posts[0];
-const previousPosts = posts.slice(1);
+const allPosts = posts; // Show all posts in sidebar
 
 // Render the latest post content
 let LatestPostContent = null;
@@ -57,12 +60,12 @@ if (latestPost) {
     </main>
     
     <aside class="sidebar">
-      <h2>Previous Posts</h2>
-      {previousPosts.length > 0 ? (
+      <h2>All Posts</h2>
+      {allPosts.length > 0 ? (
         <ul class="post-list">
-          {previousPosts.map((post) => (
+          {allPosts.map((post) => (
             <li>
-              <a href={`/blog/${post.slug}`}>
+              <a href={`${baseUrl}blog/${post.slug}/`}>
                 {post.data.title || post.slug}
               </a>
               {post.data.date && (
@@ -78,7 +81,7 @@ if (latestPost) {
           ))}
         </ul>
       ) : (
-        <p>No previous posts yet.</p>
+        <p>No posts yet.</p>
       )}
     </aside>
   </div>
@@ -102,6 +105,11 @@ if (latestPost) {
   
   .main-content {
     min-width: 0; /* Prevents grid overflow */
+  }
+  
+  /* Hide the first h1 in post content (duplicate of header title) */
+  .post-content :global(h1:first-of-type) {
+    display: none;
   }
   
   .latest-post {
