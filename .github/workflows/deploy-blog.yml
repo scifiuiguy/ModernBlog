@@ -249,7 +249,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: site-build
-          path: Pipeline/build
+          path: Pipeline/build/**
           retention-days: 7
           if-no-files-found: error
   
@@ -272,13 +272,29 @@ jobs:
           name: site-build
           path: ./build-output
       
-      - name: Verify build output
+      - name: Prepare pages build
         run: |
-          echo "Build output contents:"
-          ls -la ./build-output/Pipeline/build/ || ls -la ./build-output/ || echo "Checking root..."
-          ls -la ./
-          echo "Looking for index.html:"
-          find . -name "index.html" -type f | head -5
+          # Artifact preserves directory structure, so files are at ./build-output/Pipeline/build
+          # Copy to a clean directory for Pages deployment
+          mkdir -p ./pages-build
+          if [ -d "./build-output/Pipeline/build" ]; then
+            cp -r ./build-output/Pipeline/build/* ./pages-build/
+          elif [ -d "./build-output" ]; then
+            # Fallback: check if files are directly in build-output
+            cp -r ./build-output/* ./pages-build/ 2>/dev/null || true
+          else
+            echo "ERROR: Could not find build artifacts!"
+            echo "Contents of build-output:"
+            ls -la ./build-output/ || echo "build-output doesn't exist"
+            exit 1
+          fi
+          echo "Prepared pages build. Contents:"
+          ls -la ./pages-build/ | head -10
+          if [ ! -f "./pages-build/index.html" ]; then
+            echo "WARNING: index.html not found in pages-build!"
+          else
+            echo "✓ index.html found"
+          fi
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -286,7 +302,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./build-output/Pipeline/build
+          path: ./pages-build
       
       - name: Deploy to GitHub Pages
         id: deployment
