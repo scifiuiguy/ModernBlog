@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
+import { remarkYouTubeEmbed } from './src/plugins/remark-youtube-embed.js';
 
 // Base path is set dynamically during build
 // For GitHub Pages: /REPO_NAME/
@@ -14,6 +15,7 @@ export default defineConfig({
   base: base,
   outDir: '../build', // Top-level outDir (relative to config file location)
   markdown: {
+    remarkPlugins: [remarkYouTubeEmbed],
     shikiConfig: {
       theme: 'github-dark',
       wrap: true

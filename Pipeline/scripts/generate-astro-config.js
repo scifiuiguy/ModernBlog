@@ -21,6 +21,7 @@ export function generateAstroConfig(basePath, configPath) {
   const configTemplate = `import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
+import { remarkYouTubeEmbed } from './src/plugins/remark-youtube-embed.js';
 
 // https://astro.build/config
 export default defineConfig({
@@ -29,6 +30,7 @@ export default defineConfig({
   base: '${basePath}', // Base path for GitHub Pages or custom domain
   outDir: '../build', // Top-level outDir (relative to config file location)
   markdown: {
+    remarkPlugins: [remarkYouTubeEmbed],
     shikiConfig: {
       theme: 'github-dark',
       wrap: true
@@ -47,4 +49,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const configPath = process.argv[3] || join(__dirname, '../../site/astro.config.mjs');
   generateAstroConfig(basePath, configPath);
 }
+
 
