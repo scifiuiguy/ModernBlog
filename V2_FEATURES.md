@@ -148,3 +148,49 @@ MEDIUM_TOKEN=... DEVTO_API_KEY=... LINKEDIN_ACCESS_TOKEN=... \
 - **Draft Mode**: All staging posts are published as drafts
 - **Metadata**: Stored locally, not in repo (white-label friendly)
 
+---
+
+## v2.0 Roadmap
+
+Planned features for the next version:
+
+### 🚧 Development Experience
+
+- **Dev Server Testing**
+  - Set up Astro dev server workflow for faster iteration
+  - Hot module replacement (HMR) for instant preview while editing
+  - Auto-rebuild on markdown file changes
+  - Faster feedback loop during post writing/editing
+
+### 🚧 Social Sharing
+
+- **Social Sharing Links**
+  - Add share buttons to blog posts (LinkedIn, X/Twitter, Facebook, Discord)
+  - Generate shareable URLs with proper metadata
+  - Open Graph tags for rich previews
+  - Customizable share text and images
+  - Track sharing analytics (optional)
+
+### 🚧 SEO Enhancements
+
+- **Search Engine Optimization**
+  - Meta descriptions from frontmatter or auto-generated
+  - Open Graph tags for social media previews
+  - Twitter Card support
+  - Structured data (JSON-LD) for articles
+  - Sitemap generation
+  - robots.txt configuration
+  - Canonical URLs for all posts
+  - Image alt text optimization
+  - Semantic HTML improvements
+
+### 🚧 Content Features
+
+- **Signature Footer**
+  - Define a markdown signature template (stored in config/local file)
+  - Auto-append signature to every post during build/refresh
+  - Applied on push/workflow run
+  - Supports markdown formatting (links, images, etc.)
+  - Optional: per-post override to disable signature
+  - White-label friendly (signature stored outside repo)
+
