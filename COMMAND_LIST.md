@@ -129,6 +129,39 @@ node Pipeline/scripts/validate-frontmatter.js Posts/
 
 ## Common Tasks
 
+### Prep New Post
+**LLM Instruction Set:**
+```
+When user says "Please prep a new post":
+1. Find the highest numbered blog post in Remote/Posts/ (e.g., blog_post_4.md)
+2. Extract the number and increment it (e.g., 4 → 5)
+3. Create new file: Remote/Posts/blog_post_X.md (where X is the new number)
+4. Read Local/tag-meta.json to get cumulative tag list
+5. Scan the last 5 posts in Remote/Posts/ for any new tags not in tag-meta.json
+6. Add any new tags found to tag-meta.json and update lastUpdated date
+7. Generate frontmatter with:
+   - title: "YOUR TITLE HERE"
+   - urlSlug: "your-title-here"
+   - date: [current date in YYYY-MM-DD format]
+   - published: false
+   - tags: [complete cumulative list from tag-meta.json, comma-separated, alphabetical]
+8. Add empty content section below frontmatter
+9. Report the new post number and remind user they can delete unwanted tags
+```
+
+**Example Output:**
+```markdown
+---
+title: "YOUR TITLE HERE"
+urlSlug: "your-title-here"
+date: 2025-01-22
+published: false
+tags: [ai, blogging, coding, embeddedsystems, jlcpcb, philosophy, pcb-design, pcbway, productivity, robotics, tech, vr]
+---
+
+[Your content here]
+```
+
 ### Add New Post
 1. Create `.md` file in `Posts/`
 2. Add frontmatter (optional for MVP)
@@ -190,6 +223,14 @@ node Pipeline/scripts/test-apis.js
 | Test APIs | `node Pipeline/scripts/test-apis.js` | Verify credentials |
 
 ## LLM Instruction Templates
+
+### "Please prep a new post"
+1. Find highest numbered blog post in Remote/Posts/
+2. Create blog_post_X.md with incremented number
+3. Read Local/tag-meta.json for cumulative tags
+4. Scan last 5 posts for new tags, update tag-meta.json if needed
+5. Generate frontmatter with placeholder title, current date, published: false, and full cumulative tag list
+6. User will delete unwanted tags (subtractive workflow)
 
 ### "Publish to Stage"
 Use the staging workflow with draft mode enabled for all platforms.
