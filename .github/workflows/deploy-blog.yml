@@ -216,9 +216,11 @@ jobs:
             IMAGE_BASE_PATH="/ModernBlog/"
             echo "Using GitHub Pages, image base: /ModernBlog/"
           fi
-          echo "Fixing image paths in markdown files (../Images/ -> /Images/)..."
-          # Use /Images/ and let Astro's base path handle the prefixing
-          find Pipeline/site/src/content/blog -name "*.md" -exec sed -i "s|../Images/|/Images/|g" {} \;
+          echo "Fixing image paths in markdown files (../Images/ -> ${IMAGE_BASE_PATH}Images/)..."
+          # Replace ../Images/ with base path (Astro doesn't auto-prefix absolute paths in raw HTML)
+          find Pipeline/site/src/content/blog -name "*.md" -exec sed -i "s|../Images/|${IMAGE_BASE_PATH}Images/|g" {} \;
+          # Also fix any /Images/ paths that don't have the base path
+          find Pipeline/site/src/content/blog -name "*.md" -exec sed -i "s|src=\"/Images/|src=\"${IMAGE_BASE_PATH}Images/|g" {} \;
           echo "Image paths fixed. Sample content:"
           grep -h "src=" Pipeline/site/src/content/blog/*.md | head -3 || echo "No image tags found"
       
