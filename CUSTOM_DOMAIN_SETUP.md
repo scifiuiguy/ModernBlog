@@ -17,6 +17,8 @@ Add the following secret in your repository settings:
 - Build with the correct base path (`/` instead of `/ModernBlog/`)
 - Deploy with custom domain configuration
 
+**NOTE:** Once `BLOG_DOMAIN` is set, the site will ONLY work at the custom domain. The `username.github.io/ModernBlog/` URL will break because the build uses base path `/` instead of `/ModernBlog/`.
+
 **To trigger deployment:**
 - Make a small change to any file (e.g., add a comment) and push to git
 - Or wait for the next automatic deployment

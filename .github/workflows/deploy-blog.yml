@@ -211,9 +211,14 @@ jobs:
           cd ../..
           
           # Fix image paths in markdown files
-          # Always use /ModernBlog/ for GitHub Pages (custom domain handled separately)
-          IMAGE_BASE_PATH="/ModernBlog/"
-          echo "Using GitHub Pages, image base: /ModernBlog/"
+          # Determine base path for image URLs (matches ASTRO_BASE_PATH logic)
+          if [ -n "${{ secrets.BLOG_DOMAIN }}" ] && [[ "${{ secrets.BLOG_DOMAIN }}" != *"github.io"* ]] && [[ "${{ secrets.BLOG_DOMAIN }}" != "blog.YOUR_DOMAIN.com" ]]; then
+            IMAGE_BASE_PATH="/"
+            echo "Using custom domain, image base: /"
+          else
+            IMAGE_BASE_PATH="/ModernBlog/"
+            echo "Using GitHub Pages subdirectory, image base: /ModernBlog/"
+          fi
           echo "Converting relative image paths (../Images/ -> Images/)..."
           # Convert relative paths to base-relative paths (no leading slash, no base prefix)
           find Pipeline/site/src/content/blog -name "*.md" -exec sed -i "s|../Images/|Images/|g" {} \;
@@ -226,15 +231,18 @@ jobs:
           npm install
       
       - name: Build Astro site
-        env:
-          ASTRO_BASE_PATH: "/ModernBlog/"
         run: |
           cd Pipeline/site
-          # Set base path: Always use /ModernBlog/ for GitHub Pages
-          # Custom domain (/) will be handled by Vercel deployment or after domain verification
-          # For now, GitHub Pages always needs /ModernBlog/ base path
-          echo "Using GitHub Pages, base path: $ASTRO_BASE_PATH"
-          echo "Verifying ASTRO_BASE_PATH is set: $ASTRO_BASE_PATH"
+          # Set base path: /ModernBlog/ for GitHub Pages subdirectory, / for custom domain
+          # If BLOG_DOMAIN is set to a custom domain, use /, otherwise use /ModernBlog/
+          if [ -n "${{ secrets.BLOG_DOMAIN }}" ] && [[ "${{ secrets.BLOG_DOMAIN }}" != *"github.io"* ]] && [[ "${{ secrets.BLOG_DOMAIN }}" != "blog.YOUR_DOMAIN.com" ]]; then
+            export ASTRO_BASE_PATH="/"
+            echo "Using custom domain, base path: /"
+          else
+            export ASTRO_BASE_PATH="/ModernBlog/"
+            echo "Using GitHub Pages subdirectory, base path: /ModernBlog/"
+          fi
+          echo "Building with ASTRO_BASE_PATH: $ASTRO_BASE_PATH"
           npm run build
           # Check where build output went
           if [ -d "../build" ]; then
