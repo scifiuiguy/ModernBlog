@@ -10,7 +10,27 @@ Add the following secret in your repository settings:
 - **Secret Name**: `BLOG_DOMAIN`
 - **Secret Value**: `blog.YOUR_DOMAIN.com` (replace with your actual domain)
 
-### 2. GitHub Repository Settings
+### 2. Trigger Deployment
+
+**IMPORTANT:** After adding the `BLOG_DOMAIN` secret, you must trigger a deployment for the workflow to:
+- Generate the CNAME file with your custom domain
+- Build with the correct base path (`/` instead of `/ModernBlog/`)
+- Deploy with custom domain configuration
+
+**To trigger deployment:**
+- Make a small change to any file (e.g., add a comment) and push to git
+- Or wait for the next automatic deployment
+- The workflow will detect the `BLOG_DOMAIN` secret and configure accordingly
+
+**Example temporary change to trigger deployment:**
+```bash
+# Add a comment to any file, commit, and push
+git add .
+git commit -m "Trigger deployment for custom domain setup"
+git push
+```
+
+### 3. GitHub Repository Settings
 
 1. Go to your repository on GitHub
 2. Navigate to **Settings** → **Pages**
@@ -20,7 +40,7 @@ Add the following secret in your repository settings:
 
 The CNAME file will be automatically generated during build from the `BLOG_DOMAIN` secret.
 
-### 3. DNS Configuration
+### 4. DNS Configuration
 
 At your domain registrar, add a CNAME record:
 
@@ -31,13 +51,13 @@ At your domain registrar, add a CNAME record:
 
 **Note**: Do NOT include the repository name in the CNAME target, just your GitHub username.
 
-### 4. Wait for DNS Propagation
+### 5. Wait for DNS Propagation
 
 - DNS changes can take 24-48 hours to propagate
 - You can check propagation with: `dig blog.YOUR_DOMAIN.com` or `nslookup blog.YOUR_DOMAIN.com`
 - Once propagated, GitHub will automatically enable HTTPS
 
-### 5. Verify Setup
+### 6. Verify Setup
 
 1. Visit your blog domain (should work after DNS propagates)
 2. Check that HTTPS is enforced in GitHub Pages settings
