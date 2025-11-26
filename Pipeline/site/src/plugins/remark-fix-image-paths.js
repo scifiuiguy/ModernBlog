@@ -11,13 +11,14 @@ export function remarkFixImagePaths() {
     
     function visit(node) {
       if (node.type === 'html' && node.value) {
-        // Fix img src attributes
-        // Replace any /ModernBlog/Images/ or /Images/ with the correct base path
+        // Fix img src attributes - be very precise with the regex
+        // Match: src="/Images/filename.jpg" or src="/ModernBlog/Images/filename.jpg"
+        // Replace with: src="/ModernBlog/Images/filename.jpg"
         node.value = node.value.replace(
-          /src=["'](\/ModernBlog\/Images\/|\/Images\/)([^"']+)["']/g,
-          (match, pathPrefix, imagePath) => {
+          /src=(["'])(\/ModernBlog\/Images\/|\/Images\/)([^"']+)\1/g,
+          (match, quote, pathPrefix, imagePath) => {
             // Always use the base path from env, ensuring no double-prefixing
-            return `src="${normalizedBase}Images/${imagePath}"`;
+            return `src=${quote}${normalizedBase}Images/${imagePath}${quote}`;
           }
         );
       }
