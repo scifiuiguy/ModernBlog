@@ -7,6 +7,9 @@ on:
       - 'Posts/**'
       - 'Pipeline/**'
       - '.github/workflows/**'
+      - 'CUSTOM_DOMAIN_SETUP.md'
+      - 'AGENTS.md'
+      - 'README.md'
   workflow_dispatch:
     inputs:
       mode:
@@ -208,14 +211,9 @@ jobs:
           cd ../..
           
           # Fix image paths in markdown files
-          # Determine base path for image URLs
-          if [ -n "${{ secrets.BLOG_DOMAIN }}" ] && [[ "${{ secrets.BLOG_DOMAIN }}" != *"github.io"* ]] && [[ "${{ secrets.BLOG_DOMAIN }}" != "blog.YOUR_DOMAIN.com" ]]; then
-            IMAGE_BASE_PATH="/"
-            echo "Using custom domain, image base: /"
-          else
-            IMAGE_BASE_PATH="/ModernBlog/"
-            echo "Using GitHub Pages, image base: /ModernBlog/"
-          fi
+          # Always use /ModernBlog/ for GitHub Pages (custom domain handled separately)
+          IMAGE_BASE_PATH="/ModernBlog/"
+          echo "Using GitHub Pages, image base: /ModernBlog/"
           echo "Converting relative image paths (../Images/ -> Images/)..."
           # Convert relative paths to base-relative paths (no leading slash, no base prefix)
           find Pipeline/site/src/content/blog -name "*.md" -exec sed -i "s|../Images/|Images/|g" {} \;
@@ -230,15 +228,11 @@ jobs:
       - name: Build Astro site
         run: |
           cd Pipeline/site
-          # Set base path: /ModernBlog/ for GitHub Pages, / for custom domain
-          # If BLOG_DOMAIN is set to a custom domain, use /, otherwise use /REPO_NAME/
-          if [ -n "${{ secrets.BLOG_DOMAIN }}" ] && [[ "${{ secrets.BLOG_DOMAIN }}" != *"github.io"* ]] && [[ "${{ secrets.BLOG_DOMAIN }}" != "blog.YOUR_DOMAIN.com" ]]; then
-            export ASTRO_BASE_PATH="/"
-            echo "Using custom domain, base path: /"
-          else
-            export ASTRO_BASE_PATH="/ModernBlog/"
-            echo "Using GitHub Pages, base path: /ModernBlog/"
-          fi
+          # Set base path: Always use /ModernBlog/ for GitHub Pages
+          # Custom domain (/) will be handled by Vercel deployment or after domain verification
+          # For now, GitHub Pages always needs /ModernBlog/ base path
+          export ASTRO_BASE_PATH="/ModernBlog/"
+          echo "Using GitHub Pages, base path: /ModernBlog/"
           npm run build
           # Check where build output went
           if [ -d "../build" ]; then
