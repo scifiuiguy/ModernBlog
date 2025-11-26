@@ -179,8 +179,31 @@ jobs:
           mkdir -p Pipeline/site/src/content/blog
           mkdir -p Pipeline/site/public/Images
           
-          # Copy posts
-          cp Posts/*.md Pipeline/site/src/content/blog/ || true
+          # Clear existing posts to ensure fresh copy (remove stale files)
+          echo "Clearing existing posts from Astro content directory..."
+          rm -f Pipeline/site/src/content/blog/*.md
+          
+          # Copy posts (force overwrite)
+          echo "Copying posts from Posts/ to Astro content directory..."
+          cp -v Posts/*.md Pipeline/site/src/content/blog/ || true
+          
+          # Verify copy succeeded
+          echo "Verifying copied posts:"
+          ls -la Pipeline/site/src/content/blog/*.md || echo "WARNING: No posts found after copy!"
+          echo "Post count: $(ls -1 Pipeline/site/src/content/blog/*.md 2>/dev/null | wc -l)"
+          
+          # Verify specific post was copied correctly (for debugging)
+          if [ -f "Posts/blog_post_5.md" ] && [ -f "Pipeline/site/src/content/blog/blog_post_5.md" ]; then
+            echo "Verifying blog_post_5.md was copied correctly:"
+            SOURCE_SIZE=$(wc -c < "Posts/blog_post_5.md")
+            DEST_SIZE=$(wc -c < "Pipeline/site/src/content/blog/blog_post_5.md")
+            echo "Source size: $SOURCE_SIZE bytes, Destination size: $DEST_SIZE bytes"
+            if [ "$SOURCE_SIZE" != "$DEST_SIZE" ]; then
+              echo "WARNING: File sizes don't match! Copy may have failed."
+            else
+              echo "✓ File sizes match - copy successful"
+            fi
+          fi
           
           # Copy images (with verification)
           if [ -d "Images" ] && [ "$(ls -A Images 2>/dev/null)" ]; then

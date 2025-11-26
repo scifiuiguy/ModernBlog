@@ -58,6 +58,23 @@ ModernBlog/
 
 ## Getting Started
 
+### Important: Syncing Posts for Local Development
+
+**Before building locally**, you must sync posts from `Posts/` to `Pipeline/site/src/content/blog/`:
+
+**PowerShell (Windows):**
+```powershell
+.\Pipeline\scripts\sync-posts.ps1
+```
+
+**Bash (Linux/Mac):**
+```bash
+chmod +x Pipeline/scripts/sync-posts.sh
+./Pipeline/scripts/sync-posts.sh
+```
+
+This ensures your latest edits in `Posts/` are included in local builds. The GitHub Actions workflow does this automatically, but for local development you need to run it manually.
+
 See [SETUP.md](SETUP.md) for detailed setup instructions.
 
 Quick start:

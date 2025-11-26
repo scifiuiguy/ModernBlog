@@ -16,11 +16,19 @@ But let’s talk about the elephant in the cortex though:
 
 Lots of pros in XR have been dreaming that a brain interface will magically give us 1,000 wpm typing or let us Doc-Oc a dozen robot arms at once. No. I built Lexting a few years ago (a volumetric 3D text system) - I’m obsessed with fast interaction throughput in XR. We are human-type creatures, we have limits.
 
-**The dirty secret no one pitching a neural game controller to investors wants to admit?**
+**The dirty secret NOT shared by startups pitching a neural game controller to VCs?**
 
-Our brains are wired for ten dexterous actuators max – and even then, we mostly serialize tasks. Million of years of evolution... serial... serial... serial... run from lion, climb tree, shovel food into face... always one thing at a time, all ten fingers on one task. We are not octopuses... octopi...? Octo-whatever.
+Our brains are wired for ten dexterous actuators max. You don't actively choose to put more pressure on the ground with your pinky toe. We focused REALLY hard on that as babies for years and formed automation synapses.
 
-I used to teach drum lessons. Four-limb independence is elite-level coordination and it takes months to carve multi-tasking paths into your squishware. Asking the average brain to run ten independent robot arms in parallel would be like asking a jazz drummer to solo with all four limbs and conduct the orchestra at the same time. Possible for savants, exhausting for mortals.
+And we don't ever multi-task with most of our fingers. Try to move one without moving any others. I dare you. I mean keep the others totally still. Good luck. Index and thumb generally can. The others? Nope.
+
+We mostly serialize tasks. Million of years of evolution... serial... serial... serial... run from lion, climb tree, shovel food into face... always one thing at a time, all ten fingers on one task. We are not octopuses... octopi...? Octo-whatever.
+
+**Musicians know about physical multi-tasking limits**
+
+I paid my college tuition by teaching drum lessons. Four-limb independence is elite-level coordination. It takes months and years to carve those multi-tasking paths into your squishware. Asking the average brain to run ten independent robot arms in parallel would be like asking a jazz drummer to solo with all four limbs and conduct the orchestra at the same time. Possible for savants, exhausting for mortals.
+
+**The Virtual Reality Everything Controller?**
 
 Remember when Meta bought CTRL Labs and rumors swirled about its capabilities while it was in skunkworks? Industry hypesters said it was going to unlock god-mode multi-tasking. It's a clicker. No shade -> super-cool interface that I'm sure is rife with R&D challenges. I'll bet the dev team on that has battle scars. But that's how far expert professional devs can get in half a decade and hundreds of millions in the budget. Neuralink has obvious advantages – sub-20 ms latency, real motor restoration – but the ceiling isn’t the implant:
 

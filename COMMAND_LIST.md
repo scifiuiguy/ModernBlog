@@ -44,6 +44,22 @@ gh workflow run promote-to-production.yml --ref main
 
 ## Development Commands
 
+### Sync Posts (IMPORTANT: Run Before Local Build)
+**Always sync posts before building locally to ensure your latest edits are included:**
+
+**PowerShell (Windows):**
+```powershell
+cd Remote
+.\Pipeline\scripts\sync-posts.ps1
+```
+
+**Bash (Linux/Mac):**
+```bash
+cd Remote
+chmod +x Pipeline/scripts/sync-posts.sh
+./Pipeline/scripts/sync-posts.sh
+```
+
 ### Local Development
 ```bash
 # Navigate to Astro site
