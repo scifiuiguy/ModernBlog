@@ -64,9 +64,12 @@ export async function getStaticPaths() {
       .replace(/^-+|-+$/g, '');
   }
   
-  // Only get published posts
+  // Only get published posts (explicitly check for true or undefined/not set)
   const allPosts = await getCollection('blog');
-  const publishedPosts = allPosts.filter(post => post.data.published !== false);
+  const publishedPosts = allPosts.filter(post => {
+    const isPublished = post.data.published === true || post.data.published === undefined;
+    return isPublished;
+  });
   
   return publishedPosts.map((post) => {
     const urlSlug = getPostSlugForPaths(post);
@@ -104,7 +107,10 @@ try {
 // Get all published posts for sidebar
 const allPostsCollection = await getCollection('blog');
 const allPosts = allPostsCollection
-  .filter(post => post.data.published !== false)
+  .filter(post => {
+    const isPublished = post.data.published === true || post.data.published === undefined;
+    return isPublished;
+  })
   .sort((a, b) => {
     const dateA = new Date(a.data.date || 0);
     const dateB = new Date(b.data.date || 0);

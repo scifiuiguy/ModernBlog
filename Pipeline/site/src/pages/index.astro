@@ -47,9 +47,12 @@ function getPostSlug(post) {
     .replace(/^-+|-+$/g, '');
 }
 
-// Get all blog posts, filter to only published ones
+// Get all blog posts, filter to only published ones (explicitly check for true or undefined/not set)
 const allPostsCollection = await getCollection('blog');
-const publishedPosts = allPostsCollection.filter(post => post.data.published !== false);
+const publishedPosts = allPostsCollection.filter(post => {
+  const isPublished = post.data.published === true || post.data.published === undefined;
+  return isPublished;
+});
 
 // Sort by date (newest first)
 publishedPosts.sort((a, b) => {

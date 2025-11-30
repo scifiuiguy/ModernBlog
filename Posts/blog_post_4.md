@@ -2,7 +2,7 @@
 title: "NOOB PCB Design Ingishts"
 urlSlug: "noob-pcb-design-ingsights"
 date: 2025-11-22
-published: false
+published: true
 tags: [blogging, tech, ai, vr, robotics, embeddedsystems, pcb-design, jlcpcb, pcbway]
 ---
 

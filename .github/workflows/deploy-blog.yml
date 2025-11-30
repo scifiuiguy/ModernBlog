@@ -51,33 +51,12 @@ jobs:
           echo "Checking for posts in Posts/ directory..."
           ls -la Posts/ || echo "Posts directory not found"
           
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            # Manual trigger - process all posts
-            echo "Manual trigger - processing all posts"
-            POSTS=$(find Posts -name "*.md" -type f 2>/dev/null | tr '\n' ' ')
-          else
-            # Push trigger - check commit history
-            COMMIT_COUNT=$(git rev-list --count HEAD 2>/dev/null || echo "0")
-            echo "Commit count: $COMMIT_COUNT"
-            
-            if [ "$COMMIT_COUNT" -le "1" ]; then
-              # First commit or very few commits - process all posts
-              echo "First commit detected - processing all posts"
-              POSTS=$(find Posts -name "*.md" -type f 2>/dev/null | tr '\n' ' ')
-            else
-              # Check for changed files
-              echo "Checking for changed files..."
-              POSTS=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep "^Posts/.*\.md$" | tr '\n' ' ' || echo "")
-              if [ -z "$POSTS" ]; then
-                # No changed posts, but process all for initial setup
-                echo "No changed posts, but processing all for initial deployment"
-                POSTS=$(find Posts -name "*.md" -type f 2>/dev/null | tr '\n' ' ')
-              fi
-            fi
-          fi
+          # Always find all posts - we copy all posts to build anyway
+          # This ensures metadata changes (like published flag) are always detected
+          POSTS=$(find Posts -name "*.md" -type f 2>/dev/null | tr '\n' ' ')
           
           if [ -z "$POSTS" ]; then
-            echo "No posts to process"
+            echo "No posts found in Posts/ directory"
             echo "posts=" >> $GITHUB_OUTPUT
           else
             echo "Found posts: $POSTS"
