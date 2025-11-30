@@ -162,10 +162,13 @@ jobs:
           if-no-files-found: ignore
   
   build-site:
-    needs: [detect-changes, process-posts]
+    needs: [detect-changes]
     runs-on: ubuntu-latest
-    if: needs.detect-changes.outputs.changed-files != ''
-    # Note: Can run in parallel with publish-to-platforms (both depend on process-posts)
+    # Always build when workflow is triggered
+    # The workflow only triggers on Posts/** or Pipeline/** changes, so we should always build
+    # This ensures published flag changes and other metadata updates trigger a full rebuild
+    # We copy ALL posts anyway, so we need to rebuild whenever Posts/ changes
+    # Note: Can run in parallel with publish-to-platforms (process-posts is optional)
     steps:
       - uses: actions/checkout@v4
       
@@ -183,8 +186,9 @@ jobs:
           echo "Clearing existing posts from Astro content directory..."
           rm -f Pipeline/site/src/content/blog/*.md
           
-          # Copy posts (force overwrite)
-          echo "Copying posts from Posts/ to Astro content directory..."
+          # Copy ALL posts (force overwrite) - this ensures published flag changes are included
+          echo "Copying ALL posts from Posts/ to Astro content directory..."
+          echo "This ensures any published flag changes or metadata updates are included in the build"
           cp -v Posts/*.md Pipeline/site/src/content/blog/ || true
           
           # Verify copy succeeded
