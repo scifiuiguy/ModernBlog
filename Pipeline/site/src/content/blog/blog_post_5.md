@@ -2,7 +2,7 @@
 title: "The Robots are Coming! And they're... BRINGING jobs?"
 urlSlug: "the-robots-are-coming-and-they're-bringing-jobs"
 date: 2025-11-26
-published: false
+published: true
 tags: [ai, blogging, coding, productivity, robotics, tech, vr]
 ---
 

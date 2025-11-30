@@ -2,7 +2,7 @@
 title: "Neuralink is working wonders - Will it for us too?"
 urlSlug: "neuralink-is-working-wonders-will-it-for-us-too"
 date: 2025-11-21
-published: false
+published: true
 tags: [blogging, tech, ai, vr, robotics, embeddedsystems]
 ---
 
