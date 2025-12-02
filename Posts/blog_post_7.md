@@ -76,7 +76,14 @@ HCI researchers have documented this failure for years:
     <p style="margin: 0;">A 2019 study by Baloup, Pietrzak, and Casiez (CHI 2019) on raycasting techniques found that selecting small and distant targets leads to increased error rates, with researchers proposing filtering and cursor enhancements specifically to address precision degradation at distance. Users abandon raycasting and physically walk closer whenever the system allows it.</p>
   </div>
   <div style="flex: 1;">
-    https://www.youtube.com/watch?v=J0aQtUiQJ_E
+    <div class="youtube-embed" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+      <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+        src="https://www.youtube.com/embed/J0aQtUiQJ_E" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
   </div>
 </div>
 
