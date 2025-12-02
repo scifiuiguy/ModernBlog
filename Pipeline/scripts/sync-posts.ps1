@@ -26,5 +26,19 @@ if ($copied -gt 0) {
     Write-Host "No posts found or Posts directory doesn't exist" -ForegroundColor Yellow
 }
 
+# Copy images to public/Images for local preview
+$ImagesDir = Join-Path $RepoRoot "Pipeline\site\public\Images"
+Write-Host "Copying images..." -ForegroundColor Yellow
+New-Item -ItemType Directory -Path $ImagesDir -Force | Out-Null
+if (Test-Path "Images") {
+    Copy-Item -Path "Images\*" -Destination $ImagesDir -Recurse -ErrorAction SilentlyContinue
+    $imageCount = (Get-ChildItem "$ImagesDir\*" -ErrorAction SilentlyContinue).Count
+    if ($imageCount -gt 0) {
+        Write-Host "Synced $imageCount image(s) to public/Images" -ForegroundColor Green
+    }
+} else {
+    Write-Host "Images directory not found" -ForegroundColor Yellow
+}
+
 Write-Host ""
 Write-Host "Tip: Run this script before npm run build or npm run preview to ensure your latest edits are included" -ForegroundColor Cyan
