@@ -69,7 +69,16 @@ The same 2° twitch moves it 6 feet (a ~25X precision loss) when the object is 5
 
 Try moving something a few inches when it's 50 m out. You literally can't.
 
-HCI researchers have documented this failure for years. Multiple studies have shown that error rates and selection times increase significantly beyond 3–5 meters. Users abandon raycasting and physically walk closer whenever the system allows it.
+HCI researchers have documented this failure for years:
+
+<div style="display: flex; gap: 1rem; align-items: flex-start; margin: 1rem 0;">
+  <div style="flex: 1;">
+    <p style="margin: 0;">A 2019 study by Baloup, Pietrzak, and Casiez (CHI 2019) on raycasting techniques found that selecting small and distant targets leads to increased error rates, with researchers proposing filtering and cursor enhancements specifically to address precision degradation at distance. Users abandon raycasting and physically walk closer whenever the system allows it.</p>
+  </div>
+  <div style="flex: 1;">
+    https://www.youtube.com/watch?v=J0aQtUiQJ_E
+  </div>
+</div>
 
 We keep adding curve beams, progressive refinement, heuristic snapping, and "smart" cursors because raycasting is the devil we know.
 
