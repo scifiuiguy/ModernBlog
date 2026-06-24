@@ -8,7 +8,7 @@ tags: [space, tech, ai, spacex, investing, energy]
 
 [Kyle Hill was CERTAIN SpaceX is Vaporware](https://www.youtube.com/watch?v=-w6G7VEwNq0)
 
-When Kyle Hill's video "Space Data Centers Are Dumb" dropped, the internet went wild. Suddenly, the "smart consensus" was that putting AI compute into orbit was an engineering joke. The video claimed it would take 350 ISS-sized solar arrays just to power a single 700W GPU in space.
+When Kyle Hill's video "Space Data Centers Are Dumb" dropped, the internet went wild. Suddenly, the "smart consensus" was that putting AI compute into orbit was an engineering joke. The video claimed it would take 350 ISS-sized solar arrays just to power a single data center in space.
 
 On its face, the tech community ate it up. "Space is a vacuum! You can't cool a data center without air! The solar requirements are impossible!"
 
