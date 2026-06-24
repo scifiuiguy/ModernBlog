@@ -6,7 +6,8 @@ published: true
 tags: [space, tech, ai, spacex, investing, energy]
 ---
 
-[Kyle Hill was CERTAIN SpaceX is Vaporware](https://www.youtube.com/watch?v=-w6G7VEwNq0)
+## Kyle Hill was CERTAIN SpaceX is Vaporware
+https://www.youtube.com/watch?v=-w6G7VEwNq0
 
 When Kyle Hill's video "Space Data Centers Are Dumb" dropped, the internet went wild. Suddenly, the "smart consensus" was that putting AI compute into orbit was an engineering joke. The video claimed it would take 350 ISS-sized solar arrays just to power a single data center in space.
 
@@ -20,7 +21,7 @@ As we now know, after the historic largest public listing in history, many inves
 
 ## Starlink vs. ISS Reality Check
 
-The core flaw of Kyle Hill's "350 ISS arrays" argument is that it treats the International Space Station as the pinnacle of solar deployment. It isn't. It's an old far TBH. Just because it's the single biggest doesn't mean it's the best. Distributed modular networks are already changing the game.
+The core flaw of Kyle Hill's "350 ISS arrays" argument is that it treats the International Space Station as the pinnacle of solar deployment. It isn't. It's an old fart TBH. Just because it's the single biggest doesn't mean it's the best. Distributed modular networks are already changing the game.
 
 Let's look at the actual solar footprint currently operating in orbit:
 
@@ -63,10 +64,11 @@ While the skeptics were busy laughing at theoretical GPU limits and counting ISS
 
 Anthropic is already paying SpaceX $50 million-per-MegaWatt-per-year to rent current ground capacity, and they need more. Ground capacity will only get more expensive from here as grid supply taps out and regulators tighten the noose on behalf of an angry public. Big tech would be willing to pay MORE for space capacity, not less, due to the raw convenience of less beaurocratic red tape. But miraculously, space compute will cost SpaceX LESS, not more.
 
-Based on yet more napkin math RE: cost to deploy enough AI1 satellites to replace Anthropic's deal with a space-based equivalent, I guesstimate SpaceX has an amortized cost of ~$30 million for EITHER space-based or land-based new compute build-out. This assumes NO new regulation for ground-based data cneters other than requirement to generate their own off-grid power. In other words, SpaceX can pay off new Colossus cap-ex in less than 1 year with its current Anthropic deal, but they'll be able to do approximately the same in space. Meanwhile, the government will seek a much larger pound of flesh from the servers on the ground, making space the cheaper for SpaceX while the supply can't catch up to demand of all other competitors stuck on the ground. 
+Based on yet more napkin math RE: cost to deploy enough AI1 satellites to replace Anthropic's deal with a space-based equivalent, I guesstimate SpaceX has an amortized cost of ~$30 million for EITHER space-based or land-based new compute build-out. This assumes NO new regulation for ground-based data centers other than requirement to generate their own off-grid power. In other words, SpaceX can pay off new Colossus cap-ex in less than 1 year with its current Anthropic deal, but they'll be able to do approximately the same in space. Meanwhile, the government will seek a much larger pound of flesh from the servers on the ground, making space the cheaper for SpaceX while the supply can't catch up to demand of all other competitors stuck on the ground. 
 
 Amazon, Google, Microsoft, Meta, Oracle, OpenAI, and SoftBank are all building hundreds of ground data centers. Red tape will eat them alive, creating intense development lag, leading to shortfalls in available ground compute versus projections. They will thus have no choice but to rent from SpaceX to close the gap. It will be the only available option. Space compute will cost SpaceX less, but because of the demand squeeze, they will charge a premium for it. 
 
 Checkmate.
 
-[Kyle Hill walks back the original doomer claims in his first video](https://www.youtube.com/watch?v=4mx9Rp-SMNk)
+## Kyle Hill walks back the original doomer claims in his first video
+https://www.youtube.com/watch?v=4mx9Rp-SMNk
