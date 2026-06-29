@@ -7,9 +7,9 @@ tags: [ai, tech, politics, philosophy, blogging]
 ---
 
 <div style="display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0;">
-  <img src="Images/elon-musk.jpg" alt="Elon Musk" style="flex: 1; min-width: 150px; height: 270px; object-fit: cover;" />
-  <img src="Images/luca-guadagnino.jpg" alt="Luca Guadagnino" style="flex: 1; min-width: 150px; height: 270px; object-fit: cover;" />
-  <img src="Images/sam-altman.jpg" alt="Sam Altman" style="flex: 1; min-width: 150px; height: 270px; object-fit: cover;" />
+  <img src="Images/elon-musk.jpg" alt="Elon Musk" style="flex: 1; min-width: 150px; height: 320px; object-fit: cover;" />
+  <img src="Images/luca-guadagnino.jpg" alt="Luca Guadagnino" style="flex: 1; min-width: 150px; height: 320px; object-fit: cover;" />
+  <img src="Images/sam-altman.jpg" alt="Sam Altman" style="flex: 1; min-width: 150px; height: 320px; object-fit: cover;" />
 </div>
 
 We have reached a breaking point in modern media where it is entirely possible—and entirely rational—to be thoroughly disgusted by both sides of the tech versus entertainment paradigm.
