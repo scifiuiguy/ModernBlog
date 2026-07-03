@@ -54,8 +54,8 @@ Unfortunately, this paper answered very few of my questions. It's a swing at the
 ## The Nuts and Bolts of the Paper
 
 <div style="display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0;">
-  <img src="Images/eye-tracking-paper-video-01.png" alt="Eyes on Many paper — mode-switching gestures" style="flex: 1; min-width: 150px; height: 320px; object-fit: contain;" />
-  <img src="Images/eye-tracking-paper-video-02.png" alt="Eyes on Many paper — gaze and pinch subselection" style="flex: 1; min-width: 150px; height: 320px; object-fit: contain;" />
+  <img src="Images/eye-tracking-paper-video-01.png" alt="Eyes on Many paper — mode-switching gestures" style="flex: 1; min-width: 150px; height: 300px; object-fit: contain;" />
+  <img src="Images/eye-tracking-paper-video-02.png" alt="Eyes on Many paper — gaze and pinch subselection" style="flex: 1; min-width: 150px; height: 300px; object-fit: contain;" />
 </div>
 
 **Modes**
